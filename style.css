@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    height:100%;
+    width:99%;
+    background-color: black;
+    margin:1vh;
+}
+/* 95 vw 95 vh*/
+.player {
+    position: absolute;
+    height: 12vh;
+    width: 1vw;
+    background-color: white;
+}
+/*0vh upper border 85vh bottom border*/
+.vertical-center {
+    margin-top: 40vh;
+}
+
+#player1 {
+    z-index: 1;
+}
+
+#player2 {
+    margin-left: 98vw;
+    z-index: 2;
+}
+
+/* at 1vw collides with left paddle, 96vw with right paddle*/
+/* top is at -8vh, bot at 85vh*/
+#ball {
+    position: absolute;
+    z-index: 3;
+    left: 48vw;
+    background-color: white;
+    margin-top: 9vh;
+    top: 36vh;
+    height: 4vh;
+    width: 2vw;
+}
+
+#scoreframe1 {
+    background-color:rgb(255, 255, 255, 0);
+    position:absolute;
+    z-index: 4;
+    text-align: center;
+    width: 49vw;
+    height:95vh;
+    color:rgb(255, 255, 255, 0.7);
+    font-size:28px;
+}
+
+#scoreframe2 {
+    background-color:rgb(255, 255, 255, 0);
+    margin-left: 51vw;
+    position:absolute;
+    z-index: 5;
+    text-align: center;
+    width: 48vw;
+    height:95vh;
+    color:rgb(255, 255, 255, 0.7);
+    font-size:28px;
+}
+
+#victor {
+    margin-left: 35vw;
+    color:white;
+    position:absolute;
+    z-index: 6;
+    display:none;
+}
+
+#subtext {
+    margin-top: 46vh;
+    margin-left:32vw;
+    color:white;
+    position:absolute;
+    z-index: 6;
+    display:none;
+}
+
+.menu {
+    z-index:7;
+    position: absolute;
+    height: 96vh;
+    width:99%;
+    background-color: rgb(0,0,0,0.8);
+}
+
+.logo {
+    width:400px;
+    top: 24vh;
+    left: 32vw;
+    position:absolute;
+    z-index:7;
+}
+
+#startBtn {
+    display:none;
+    position: absolute;
+    z-index:8;
+    width: 20vw;
+    height: 10vh;
+    top: 52vh;
+    left: 39vw;
+    border:none;
+    background-color: rgb(212, 212, 212);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 28px;
+    letter-spacing:8px;
+    text-align: center;
+}
+
+#startBtn:hover {
+    background-color: white;
+}
+
+#startBtn:active {
+    background-color: rgb(255, 255, 255, 0.4);
+}
+
+.controls {
+    margin-top: 18vh;
+    display:none;
+    margin-left: 21vw;
+}
+
+#counter {
+    position:absolute;
+    z-index:9;
+    margin-top:-40vh;
+    margin-left:46vw;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+
+
