@@ -5,40 +5,87 @@ let stimer;
 let ballTimer;
 let flag = true;
 let audioFlag = true;
+let ballX;
+let ballY;
 
 let p1score = 0
 let p2score = 0
 
 let multiplier = 1;
 
-let ballX = [0.5,-0.5][Math.floor(Math.random()*2)]
-let ballY = [1,-1][Math.floor(Math.random()*2)]
 let ballXpos = 48
 let ballYpos = 36
 
-const playTheme = () => {
-    if (audioFlag) {
-        document.getElementById("theme").play()
-        document.getElementById("startBtn").style.display = "block";
+let optFlag = false
+
+let sensitivity = 10;
+
+let pastFlag = false;
+
+const sfxChange = () => {
+    audioFlag = !audioFlag
+    switch(audioFlag) {
+        case true:
+            document.getElementById("sfxBtn").innerText = `SFX ON`
+        break;
+        case false:
+            document.getElementById("sfxBtn").innerText = `SFX OFF`
+            document.getElementById("theme").muted = "true"
+        break;
     }
 }
 
+const displayOptions = () => {
+    optFlag = true;
+    document.getElementById("outerframe").style.display = "block";
+}
+
+const closeOptions = () => {
+    optFlag = false;
+    document.getElementById("outerframe").style.display = "none";
+}
+
+const playTheme = () => {
+    document.getElementById("theme").play()
+    document.getElementById("startBtn").style.display = "block";
+    document.getElementById("optBtn").style.display = "block";
+}
+
 const gameInit = async () => {
+    pastFlag = true;
     document.getElementById("theme").muted = "true"
-    document.getElementById("start").play()
+    if (audioFlag) {
+        document.getElementById("start").play()
+    }
     document.getElementById("mDisplay").style.display = "none";
     document.getElementById("p1c").style.display = "block";
     document.getElementById("p2c").style.display = "block";
+    document.getElementById("pauseframe").style.display = "block";
     setTimeout(() => {
         document.getElementById("p1c").style.display = "none";
         document.getElementById("p2c").style.display = "none";
+        document.getElementById("pauseframe").style.display = "none";
         gameStart();
     }, 3000)
 }
 
+const rstBtn = () => {
+    if (!pastFlag) {
+        return;
+    }
+    p1score = 0
+    p2score = 0
+    document.getElementById("p1score").innerText = `${p1score}`
+    document.getElementById("p2score").innerText = `${p2score}`
+    flag = true;
+    gameOver(3);
+}
+
 const gameOver = (playerWon) => {
     if (playerWon != 3) {
-        document.getElementById("winsound").play()
+        if (audioFlag) {
+            document.getElementById("winsound").play()
+        }
     }
     document.getElementById("ball").style.display = "none";
     multiplier = 1;
@@ -50,17 +97,16 @@ const gameOver = (playerWon) => {
             p1score++
             document.getElementById("victor").style.display = "block"
             document.getElementById("victor").innerText = "PLAYER 1 WON"
-            document.getElementById("subtext").style.display = "block"
             document.getElementById("p1score").innerText = `${p1score}`
         break;
         case 2:
             p2score++
             document.getElementById("victor").style.display = "block"
             document.getElementById("victor").innerText = "PLAYER 2 WON"
-            document.getElementById("subtext").style.display = "block"
             document.getElementById("p2score").innerText = `${p2score}`
         break;
     }
+    document.getElementById("subtext").style.display = "block"
     document.addEventListener("keyup", function(event) {
         if (event.keyCode == "13") {
             if (flag) {
@@ -76,8 +122,10 @@ const gameOver = (playerWon) => {
 }
 
 const gameStart = () => {
-    document.getElementById("start").play()
-    audioFlag = false;
+    let temp=0;
+    if (audioFlag) {
+        document.getElementById("start").play()
+    }
     document.getElementById("victor").style.display = "none"
     document.getElementById("subtext").style.display = "none"
     let ballX = [0.5,-0.5][Math.floor(Math.random()*2)]
@@ -88,7 +136,9 @@ const gameStart = () => {
             if (ballYpos + 8 >= p1pos-8 && ballYpos + 8 <= p1pos+18) {
                 ballX = 0.5 * multiplier
                 multiplier += 0.05
-                document.getElementById("paddleHit").play()
+                if (audioFlag) {
+                    document.getElementById("paddleHit").play()
+                }
             } else {
                 flag = true
                 gameOver(2)
@@ -98,7 +148,9 @@ const gameStart = () => {
             if (ballYpos + 8 >= p2pos-8 && ballYpos + 8 <= p2pos+18) {
                 ballX = -0.5 * multiplier
                 multiplier += 0.05
-                document.getElementById("paddleHit").play()
+                if (audioFlag) {
+                    document.getElementById("paddleHit").play()
+                }
             } else {
                 flag = true
                 gameOver(1)
@@ -110,10 +162,21 @@ const gameStart = () => {
         if (ballYpos >= 85) {
             ballY = -1 * multiplier
         }
-        ballXpos += ballX
-        ballYpos += ballY
-        document.getElementById("ball").style.left = `${ballXpos}vw`
-        document.getElementById("ball").style.top = `${ballYpos}vh`
+        /*if (optFlag) {
+            if (temp == 0) {
+                tempX = ballX;
+                tempY = ballY;
+                temp = 1;
+            }
+            ballX = 0;
+            ballY = 0;
+        }*/
+        if (!optFlag) {
+            ballXpos += ballX
+            ballYpos += ballY
+            document.getElementById("ball").style.left = `${ballXpos}vw`
+            document.getElementById("ball").style.top = `${ballYpos}vh`
+        }
     }, 20)
 }
 
@@ -136,12 +199,12 @@ const player2MoveDown = () => {
 
 const player2MoveDownSetting = () => {
     if(stimer) return;
-    stimer= setInterval(player2MoveDown, 10);
+    stimer= setInterval(player2MoveDown, sensitivity);
 }
 
 const player2MoveUpSetting = () => {
     if(stimer) return;
-    stimer= setInterval(player2MoveUp, 10);
+    stimer= setInterval(player2MoveUp, sensitivity);
 }
 
 const player1MoveUp = () => {
@@ -162,12 +225,12 @@ const player1MoveDown = () => {
 
 const player1MoveDownSetting = () => {
     if(timer) return;
-    timer= setInterval(player1MoveDown, 10);
+    timer= setInterval(player1MoveDown, sensitivity);
 }
 
 const player1MoveUpSetting = () => {
     if(timer) return;
-    timer= setInterval(player1MoveUp, 10);
+    timer= setInterval(player1MoveUp, sensitivity);
 }
   
 const playerStop = () => {
@@ -181,7 +244,7 @@ const player2Stop = () => {
 }
 
 document.addEventListener("keydown", function(event){
-    if (event.key == "s") {
+    if (event.key.toLowerCase() == "s") {
         player1MoveDownSetting();
         document.addEventListener("keyup", function(sec){
             if (sec.key == "s") {
@@ -189,7 +252,7 @@ document.addEventListener("keydown", function(event){
             }
         })
     }
-    if (event.key == "w") {
+    if (event.key.toLowerCase() == "w") {
         player1MoveUpSetting();
         document.addEventListener("keyup", function(sec){
             if (sec.key == "w") {
@@ -213,4 +276,18 @@ document.addEventListener("keydown", function(event){
             }
         })
     }
+})
+
+document.addEventListener("keyup", function(event) {
+    if (event.keyCode == "27") {
+        closeOptions();
+    }
+    if (event.key.toLowerCase() == "p") {
+        displayOptions();
+    }
+})
+
+document.getElementById("sensRange").addEventListener("change", function(){
+    let temporary = 6 - document.getElementById("sensRange").value;
+    sensitivity = temporary * 5;
 })
